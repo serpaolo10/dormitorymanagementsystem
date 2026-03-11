@@ -1059,9 +1059,10 @@ tbody tr:hover td {
 
 .sidebar-logout:hover,
 .sidebar-logout:focus-visible {
-  background: #ff5d78 !important;
+  background: #911C13 !important;
   color: #ffffff !important;
   border: 0 !important;
+  transition: background-color 0.2s ease;
 }
 
 .table-actions {
@@ -1353,24 +1354,26 @@ button:disabled {
 }
 
 .hero-access-actions .button {
-  width: 70%;
-  height: 70%;
-  padding: 12px 14px;
+  width: 80%;
+  height: 50px;
+  padding: 0;
   justify-self: center;
 }
 
 .hero-cta {
-  display: inline-block;
+  position: relative;
+  display: flex;
+  align-items: center;
   border-radius: 0;
   background-color: var(--bg-sidebar);
   border: 1px solid var(--text-primary);
   color: #ffffff;
   text-align: center;
-  font-size: 17px;
-  transition: all 0.5s;
+  font-size: 16px;
+  transition: 200ms;
   cursor: pointer;
   margin: 0;
-  box-shadow: none;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.18);
 }
 
 .hero-cta:hover,
@@ -1384,48 +1387,63 @@ button:disabled {
   transform: none;
 }
 
+.hero-cta,
 .hero-cta span {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  transition: 0.5s;
-  padding-left: 28px;
+  transition: 200ms;
 }
 
-.hero-cta span::after {
-  content: '';
+.hero-cta .text {
+  width: calc(100% - 42px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.hero-cta .icon {
   position: absolute;
-  opacity: 0;
-  top: 50%;
-  left: 0;
-  right: auto;
-  width: 22px;
-  height: 22px;
-  transform: translateY(-50%);
-  transition: 0.5s;
+  right: 0;
+  top: 0;
+  width: 42px;
+  height: 100%;
+  border-left: 1px solid rgba(245, 243, 239, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-cta .icon::before {
+  content: '';
+  width: 18px;
+  height: 18px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 22px 22px;
+  background-size: 18px 18px;
 }
 
-.hero-cta-signin span::after {
+.hero-cta-signin .icon::before {
   background-image: url('./icons/hero-signin.svg');
 }
 
-.hero-cta-register span::after {
+.hero-cta-register .icon::before {
   background-image: url('./icons/hero-register.svg');
 }
 
-.hero-cta:hover span,
-.hero-cta:focus-visible span {
-  padding-left: 34px;
+.hero-cta:hover .text,
+.hero-cta:focus-visible .text {
+  color: transparent;
 }
 
-.hero-cta:hover span::after,
-.hero-cta:focus-visible span::after {
-  opacity: 1;
-  left: 0;
+.hero-cta:hover .icon,
+.hero-cta:focus-visible .icon {
+  width: 100%;
+  border-left: none;
+}
+
+.hero-cta:active .icon::before {
+  transform: scale(0.88);
 }
 
 .auth-block[hidden] {
