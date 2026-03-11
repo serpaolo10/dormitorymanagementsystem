@@ -629,6 +629,10 @@ table {
   border-collapse: collapse;
 }
 
+#tenants table {
+  table-layout: fixed;
+}
+
 #bill-table td:nth-child(1),
 #bill-table td:nth-child(2),
 #bill-table td:nth-child(4),
@@ -731,9 +735,41 @@ tbody tr:hover td {
   text-align: center;
 }
 
+#tenants th:nth-child(1),
+#tenants td:nth-child(1) {
+  width: 19%;
+}
+
+#tenants th:nth-child(2),
+#tenants td:nth-child(2) {
+  width: 21%;
+}
+
+#tenants th:nth-child(3),
+#tenants td:nth-child(3) {
+  width: 12%;
+}
+
+#tenants th:nth-child(4),
+#tenants td:nth-child(4) {
+  width: 12%;
+}
+
+#tenants th:nth-child(5),
+#tenants td:nth-child(5) {
+  width: 15%;
+}
+
 #tenants th.tenant-action-col,
 #tenants td:nth-child(6) {
+  width: 21%;
   text-align: right;
+}
+
+#tenants td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .table-inline-input,
@@ -818,17 +854,30 @@ tbody tr:hover td {
   position: absolute;
   right: 14px;
   top: 14px;
-  min-height: 32px;
-  padding: 6px 10px;
-  opacity: 0;
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid var(--text-primary);
+  background: rgba(245, 243, 239, 0.92);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.22;
   pointer-events: none;
-  transition: opacity 140ms ease;
+  transition: opacity 140ms ease, background-color 140ms ease, color 140ms ease;
 }
 
 .room-card:hover .room-hover-action,
 .room-card:focus-within .room-hover-action {
   opacity: 1;
   pointer-events: auto;
+}
+
+.room-hover-action:hover,
+.room-hover-action:focus-visible {
+  background: var(--text-primary);
+  color: var(--text-light);
 }
 
 .room-card-available .room-quick-assign {
