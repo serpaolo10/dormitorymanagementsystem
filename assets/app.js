@@ -674,6 +674,7 @@ async function initAdmin() {
     const managedRooms = roomsWithOccupants.filter((room) => !hiddenRoomNumberKeys.has(roomNumberKey(room.roomNumber)));
     const searchTerm = String(tenantSearch?.value || '').trim().toLowerCase();
     const nonArchivedTenants = tenants.filter((tenant) => tenant.isArchived !== true);
+    const activeTenants = nonArchivedTenants.filter((tenant) => String(tenant.status || '') === 'Active');
     const searchedTenants = searchTerm
       ? nonArchivedTenants.filter((tenant) =>
           String(tenant.name || '').toLowerCase().includes(searchTerm) ||
@@ -987,7 +988,7 @@ async function initAdmin() {
     if (billTenantSelect) {
       const selectedTenant = billTenantSelect.value;
       billTenantSelect.innerHTML = `<option value="" disabled ${selectedTenant ? '' : 'selected'}>Tenant Name</option>` +
-        tenants.map((tenant) => `<option value="${tenant.id}" ${selectedTenant === tenant.id ? 'selected' : ''}>${tenant.name || tenant.email}</option>`).join('');
+        activeTenants.map((tenant) => `<option value="${tenant.id}" ${selectedTenant === tenant.id ? 'selected' : ''}>${tenant.name || tenant.email}</option>`).join('');
     }
 
     const billTable = document.getElementById('bill-table');
@@ -1092,7 +1093,7 @@ async function initAdmin() {
       const utilitiesRaw = billForm.querySelector('input[name="utilitiesRaw"]');
 
       const syncRentFromTenant = () => {
-        const selected = tenants.find((tenant) => tenant.id === tenantSelect?.value);
+        const selected = activeTenants.find((tenant) => tenant.id === tenantSelect?.value);
         const assignedRoom = roomsWithOccupants.find((room) => room.id === selected?.roomId);
         if (!selected) {
           rentDisplay.value = '';
