@@ -1,0 +1,350 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Vn79y",
+      "x": 40,
+      "y": 40,
+      "name": "Dormitory UI Overview",
+      "width": 1600,
+      "height": 1340,
+      "fill": "#F5F3EF",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "HM45C",
+          "name": "kicker",
+          "fill": "#C05A3C",
+          "content": "PROJECT UI MAP",
+          "fontFamily": "Space Grotesk",
+          "fontSize": 12,
+          "fontWeight": "600",
+          "letterSpacing": 1
+        },
+        {
+          "type": "text",
+          "id": "EN1fD",
+          "name": "title",
+          "fill": "#1a1a1a",
+          "content": "Dormitory Management Site",
+          "fontFamily": "Space Grotesk",
+          "fontSize": 48,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "b9vS4",
+          "name": "subtitle",
+          "fill": "#555555",
+          "content": "High-level overview of the current UI structure across entry pages, shared assets, and role-based workflows.",
+          "fontFamily": "Inter",
+          "fontSize": 16
+        },
+        {
+          "type": "frame",
+          "id": "rEu1q",
+          "name": "summaryRow",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "VP6rP",
+              "name": "sharedCard",
+              "width": 340,
+              "fill": "#1a1a1a",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g4DGi",
+                  "name": "sharedLabel",
+                  "fill": "#C05A3C",
+                  "content": "SHARED ASSETS",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "Llgjb",
+                  "name": "sharedFix",
+                  "fill": "#F5F3EF",
+                  "content": "assets/style.css\nShared visual system for all pages.\n\nassets/app.js\nAuth, routing, Firestore reads/writes,\nand dashboard rendering.\n\nassets/firebase-config.js\nFirebase bootstrapping layer.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 14
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Dzpmq",
+              "name": "pagesCol",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Gn6jY",
+                  "name": "indexCard",
+                  "width": "fill_container",
+                  "fill": "#E8E4DC",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gqkjW",
+                      "name": "indexTitle",
+                      "fill": "#1a1a1a",
+                      "content": "index.html  /  Landing + Auth",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "BENiT",
+                      "name": "indexText",
+                      "fill": "#555555",
+                      "content": "Purpose: entry point for sign-in, registration, and system explanation.\nKey UI blocks: hero, login form, signup form, module cards, Firestore collections, onboarding note.\nPrimary action: authenticate, then route users by role.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 14
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "htC9l",
+                  "name": "adminCard",
+                  "width": "fill_container",
+                  "fill": "#E8E4DC",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yBBa0",
+                      "name": "adminTitle",
+                      "fill": "#1a1a1a",
+                      "content": "admin.html  /  Operations Dashboard",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XA3U9",
+                      "name": "adminText",
+                      "fill": "#555555",
+                      "content": "Purpose: central admin workspace for tenant operations.\nKey UI blocks: overview stats, tenant table + edit panel, room occupancy board, assignment form, bill generation, payment review, visitor log, reporting cards.\nPrimary action: manage tenant lifecycle and operational records.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 14
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TJWpK",
+                  "name": "tenantCard",
+                  "width": "fill_container",
+                  "fill": "#E8E4DC",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "90sm5",
+                      "name": "tenantTitle",
+                      "fill": "#1a1a1a",
+                      "content": "tenant.html  /  Self-Service Portal",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "oRVly",
+                      "name": "tenantText",
+                      "fill": "#555555",
+                      "content": "Purpose: give tenants visibility into room, bills, payments, visitors, and account recovery.\nKey UI blocks: summary stats, room detail panel, billing table, payment history, visitor registration + log, password reset, profile update.\nPrimary action: self-service status checking and record submission.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 14
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZU5Oz",
+          "name": "flowRow",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "TtEoz",
+              "name": "flowCard",
+              "width": "fill_container",
+              "fill": "#1a1a1a",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "RJW4X",
+                  "name": "flowLabel",
+                  "fill": "#C05A3C",
+                  "content": "ROLE FLOW",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "oU28e",
+                  "name": "flowText",
+                  "fill": "#F5F3EF",
+                  "content": "1. User lands on index.html and signs in or registers.\n2. assets/app.js checks users/{uid}.role in Firestore.\n3. Admin users route to admin.html.\n4. Tenant users route to tenant.html.\n5. Both dashboards read and write shared Firestore collections based on role-specific actions.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 14
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "i49el",
+              "name": "dataCard",
+              "width": 420,
+              "fill": "#E8E4DC",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Md12A",
+                  "name": "dataLabel",
+                  "fill": "#C05A3C",
+                  "content": "DATA MODEL",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "mrqNU",
+                  "name": "dataText",
+                  "fill": "#1a1a1a",
+                  "content": "users\nrooms\ntenantAssignments\nbills\npayments\nvisitorLogs",
+                  "lineHeight": 1.8,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "U9woB",
+          "name": "bottomRow2",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "QSoc4",
+              "name": "structureCard2",
+              "width": "fill_container",
+              "fill": "#E8E4DC",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "U5c1d",
+                  "name": "structureLabel2",
+                  "fill": "#C05A3C",
+                  "content": "PROJECT STRUCTURE",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "E3ki2",
+                  "name": "structureText2",
+                  "fill": "#1a1a1a",
+                  "content": "/index.html\n/admin.html\n/tenant.html\n/assets/style.css\n/assets/app.js\n/assets/firebase-config.js\n/dashboard.pen",
+                  "lineHeight": 1.8,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DVfFX",
+              "name": "uiCard2",
+              "width": 520,
+              "fill": "#1a1a1a",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QHCPP",
+                  "name": "uiLabel2",
+                  "fill": "#C05A3C",
+                  "content": "CURRENT UI CHARACTER",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "d0DTO",
+                  "name": "uiFix",
+                  "fill": "#F5F3EF",
+                  "content": "Current implementation is softer than the chosen overview style:\nserif display headings, glassy cards, gradients, rounded corners,\nand pill buttons. This board keeps the project structure intact\nwhile presenting it through a Nordic brutalist lens.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 14
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

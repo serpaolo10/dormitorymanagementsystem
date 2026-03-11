@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console | Dormitory Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="admin">
+  <div class="dashboard-shell">
+    <aside class="sidebar card">
+      <a class="brand brand-vertical" href="index.html">
+        <span class="brand-mark">D</span>
+        <span>
+          <strong>Dormitory MS</strong>
+          <small>Admin Console</small>
+        </span>
+      </a>
+      <nav class="sidenav">
+        <a href="#overview">Overview</a>
+        <a href="#tenants">Tenants</a>
+        <a href="#rooms">Rooms</a>
+        <a href="#billing">Billing</a>
+        <a href="#payments">Payments</a>
+        <a href="#visitors">Visitors</a>
+        <a href="#reports">Reports</a>
+        <button class="sidenav-reset" id="open-reset-password-modal" type="button">Reset Password</button>
+      </nav>
+      <div class="sidebar-note">
+        <p>Signed in as</p>
+        <strong id="admin-user-name">Loading...</strong>
+        <span id="admin-user-role">Checking role...</span>
+      </div>
+      <button class="button secondary sidebar-logout" id="logout-button" type="button">Log Out</button>
+    </aside>
+
+    <main class="dashboard-main">
+      <section id="overview" class="section-block">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h1>Operational dashboard</h1>
+          </div>
+          
+        </div>
+        <div class="status-banner" id="admin-status"></div>
+        <div class="stats-row" id="admin-stats"></div>
+      </section>
+
+      <section id="tenants" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Tenant Management</p>
+            <h2>Registered tenant accounts</h2>
+          </div>
+        </div>
+        <p class="form-note">Manage existing tenant accounts and their information here.</p>
+        <div class="search-row">
+          <input type="search" id="tenant-search" placeholder="Search tenant by name or email">
+          <span class="search-count" id="tenant-search-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-tenant-sort="name" role="button" tabindex="0" aria-label="Sort by Name">
+                  <div class="header-container">
+                    <span>Name</span>
+                    <i class="sort-icon fi fi-sr-sort-alt" aria-hidden="true"></i>
+                  </div>
+                </th>
+                <th data-tenant-sort="email" role="button" tabindex="0" aria-label="Sort by Email">
+                  <div class="header-container">
+                    <span>Email</span>
+                    <i class="sort-icon fi fi-sr-sort-alt" aria-hidden="true"></i>
+                  </div>
+                </th>
+                <th class="tenant-center-col" data-tenant-sort="contact" role="button" tabindex="0" aria-label="Sort by Contact">
+                  <div class="header-container">
+                    <span>Contact</span>
+                    <i class="sort-icon fi fi-sr-sort-alt" aria-hidden="true"></i>
+                  </div>
+                </th>
+                <th class="tenant-center-col" data-tenant-sort="room" role="button" tabindex="0" aria-label="Sort by Room">
+                  <div class="header-container">
+                    <span>Room</span>
+                    <i class="sort-icon fi fi-sr-sort-alt" aria-hidden="true"></i>
+                  </div>
+                </th>
+                <th class="tenant-center-col" data-tenant-sort="status" role="button" tabindex="0" aria-label="Sort by Status">
+                  <div class="header-container">
+                    <span>Status</span>
+                    <i class="sort-icon fi fi-sr-sort-alt" aria-hidden="true"></i>
+                  </div>
+                </th>
+                <th class="tenant-action-col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tenant-table"></tbody>
+          </table>
+        </div>
+        <div class="tenant-pagination-wrap">
+          <nav class="tenant-pagination" id="tenant-pagination" aria-label="Tenant table pagination"></nav>
+        </div>
+      </section>
+
+      <section id="rooms" class="section-block">
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Room Assignment</p>
+              <h2>Occupancy board</h2>
+            </div>
+          </div>
+          <div id="room-cards" class="room-grid"></div>
+        </article>
+      </section>
+
+      <div class="modal-overlay" id="room-placement-modal" hidden>
+        <div class="modal-card card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Room Assignment</p>
+              <h2>Update room placement</h2>
+            </div>
+            <button class="button secondary" id="room-modal-close" type="button">Close</button>
+          </div>
+          <form class="stack-form" id="room-modal-form">
+            <input type="hidden" name="roomId">
+            <input type="text" name="roomLabel" readonly>
+            <select name="tenant" required>
+              <option value="" selected disabled>Tenant Name</option>
+            </select>
+            <input type="date" name="startDate" required>
+            <button class="button primary" type="submit">Assign Room</button>
+          </form>
+        </div>
+      </div>
+
+      <section id="billing" class="section-block split-block">
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Bill Generator</p>
+              <h2>Create monthly charges</h2>
+            </div>
+          </div>
+          <form class="stack-form" id="bill-form">
+            <select name="tenant" required>
+              <option value="" selected disabled>Tenant Name</option>
+            </select>
+            <div class="bill-period-row">
+              <input type="text" name="billingMonth" required placeholder="Month" list="billing-month-options" autocomplete="off">
+              <input type="text" name="billingYear" required placeholder="Year" inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
+            </div>
+            <datalist id="billing-month-options">
+              <option value="January"></option>
+              <option value="February"></option>
+              <option value="March"></option>
+              <option value="April"></option>
+              <option value="May"></option>
+              <option value="June"></option>
+              <option value="July"></option>
+              <option value="August"></option>
+              <option value="September"></option>
+              <option value="October"></option>
+              <option value="November"></option>
+              <option value="December"></option>
+            </datalist>
+            <input type="text" name="rentDisplay" placeholder="Rent" readonly>
+            <div class="peso-input-wrap">
+              <input type="text" name="utilitiesDisplay" placeholder="Utilities (PHP)" inputmode="decimal" autocomplete="off" required>
+              <input type="hidden" name="utilitiesRaw">
+            </div>
+            <button class="button primary" type="submit">Generate Bill</button>
+          </form>
+        </article>
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Generated Bills</p>
+              <h2>Billing records</h2>
+            </div>
+          </div>
+          <div class="table-wrap small-table">
+            <table>
+              <thead>
+                <tr>
+                   <th>Tenant</th>
+                  <th>Month</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="bill-table"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section id="payments" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Payment Tracking</p>
+            <h2>Record and confirm payments</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bill</th>
+                <th>Tenant</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="payment-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="visitors" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Visitor Monitoring</p>
+            <h2>Security log review</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tenant</th>
+                <th>Visitor</th>
+                <th>Date</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody id="visitor-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="reports" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Basic Report</p>
+            <h2>Summary snapshot for presentation</h2>
+          </div>
+        </div>
+        <div class="report-grid">
+          <article>
+            <h3>Occupancy Rate</h3>
+            <p id="occupancy-rate"></p>
+          </article>
+          <article>
+            <h3>Monthly Revenue Collected</h3>
+            <p id="revenue-total"></p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="modal-overlay" id="password-reset-modal" hidden>
+    <div class="modal-card card password-reset-card">
+      <div class="section-heading compact">
+        <div>
+          <p class="eyebrow">Account Security</p>
+          <h2>Reset Password</h2>
+        </div>
+        <button class="button secondary" id="password-reset-close" type="button">Close</button>
+      </div>
+      <form class="stack-form" id="password-reset-form">
+        <label class="reset-inline-label">
+          <span>New Password</span>
+          <input type="password" name="newPassword" minlength="6" required>
+        </label>
+        <label class="reset-inline-label">
+          <span>Confirm Password</span>
+          <input type="password" name="confirmPassword" minlength="6" required>
+        </label>
+        <button class="button primary" type="submit">Update Password</button>
+      </form>
+      <p class="auth-message" id="password-reset-message"></p>
+    </div>
+  </div>
+  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Password | Dormitory Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --cream: #f2ede4; --black: #000000; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body { background: var(--cream); color: #1a1a1a; font-family: 'Inter', 'Segoe UI', sans-serif; display: grid; place-items: center; padding: 24px; }
+    .reset-card { width: min(520px, 100%); border: 1px solid var(--black); background: var(--cream); padding: 24px; }
+    .eyebrow, h1, button, .back-link, label span { font-family: 'Space Grotesk', 'Segoe UI', sans-serif; }
+    .eyebrow { margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; }
+    h1 { margin: 0 0 12px; font-size: clamp(34px, 5vw, 48px); line-height: 0.95; text-transform: uppercase; letter-spacing: -0.02em; font-weight: 700; }
+    p { margin: 0 0 14px; color: #333333; font-size: 14px; }
+    .stack-form { display: grid; gap: 12px; margin-top: 14px; }
+    label { display: grid; gap: 6px; }
+    label span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    input { width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--black); background: var(--cream); font: inherit; color: #111111; }
+    input:focus { outline: none; border-color: #000000; }
+    .button-primary { min-height: 46px; border: 1px solid #000000; background: #000000; color: #ffffff; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; cursor: pointer; }
+    .button-primary:hover, .button-primary:focus-visible { background: #1d1d1d; }
+    .auth-message { margin-top: 14px; min-height: 20px; font-size: 14px; }
+    .auth-message.success { color: #0f5132; }
+    .auth-message.error { color: #b00020; }
+    .back-link { display: inline-block; margin-top: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: underline; color: #000000; font-weight: 700; }
+  </style>
+</head>
+<body data-page="reset-password">
+  <main class="reset-card">
+    <p class="eyebrow">Account Security</p>
+    <h1>Reset Password</h1>
+    <p>Enter a new password for your account.</p>
+    <form class="stack-form" id="reset-password-form">
+      <label>
+        <span>New Password</span>
+        <input type="password" name="newPassword" required minlength="6" autocomplete="new-password">
+      </label>
+      <label>
+        <span>Confirm Password</span>
+        <input type="password" name="confirmPassword" required minlength="6" autocomplete="new-password">
+      </label>
+      <button class="button-primary" type="submit">Update Password</button>
+    </form>
+    <p class="auth-message" id="reset-message"></p>
+    <a class="back-link" id="reset-login-link" href="../index.html" hidden>Return to Sign In</a>
+  </main>
+  <script type="module" src="../assets/app.js"></script>
+</body>
+</html>
