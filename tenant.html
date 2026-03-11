@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tenant Portal | Dormitory Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="tenant">
+  <div class="dashboard-shell tenant-shell">
+    <aside class="sidebar card">
+      <a class="brand brand-vertical" href="index.html">
+        <span class="brand-mark">D</span>
+        <span>
+          <strong>Dormitory MS</strong>
+          <small>Tenant Portal</small>
+        </span>
+      </a>
+      <nav class="sidenav">
+        <a href="#summary">Summary</a>
+        <a href="#room">My Room</a>
+        <a href="#bills">Bills</a>
+        <a href="#payments">Payments</a>
+        <a href="#visitors">Visitors</a>
+        <a href="#security">Security</a>
+        <button class="sidenav-reset" id="open-reset-password-modal" type="button">Reset Password</button>
+      </nav>
+      <div class="sidebar-note">
+        <p>Signed in as</p>
+        <strong id="tenant-user-name">Loading...</strong>
+        <span id="tenant-user-role">Checking role...</span>
+      </div>
+      <button class="button secondary sidebar-logout" id="logout-button" type="button">Log Out</button>
+    </aside>
+
+    <main class="dashboard-main">
+      <section id="summary" class="section-block">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Tenant Dashboard</p>
+            <h1>Billing and room self-service</h1>
+          </div>
+        </div>
+        <div class="status-banner" id="tenant-status"></div>
+        <div class="stats-row" id="tenant-stats"></div>
+      </section>
+
+      <section id="room" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Assigned Room</p>
+            <h2>Current occupancy details</h2>
+          </div>
+        </div>
+        <div id="tenant-room-panel" class="detail-panel"></div>
+      </section>
+
+      <section id="bills" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Monthly Bills</p>
+            <h2>Charge breakdown</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Rent</th>
+                <th>Utilities</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tenant-bill-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="payments" class="section-block card data-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">Payment History</p>
+            <h2>Recorded transactions</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tenant-payment-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="visitors" class="section-block split-block">
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Visitor Registration</p>
+              <h2>Log a visitor</h2>
+            </div>
+          </div>
+          <form class="stack-form" id="visitor-form">
+            <input type="text" name="visitorName" placeholder="Visitor name" required>
+            <input type="date" name="visitDate" required>
+            <input type="time" name="timeIn" required>
+            <input type="time" name="timeOut" required>
+            <input type="text" name="purpose" placeholder="Purpose" required>
+            <button class="button primary" type="submit">Save Visitor Entry</button>
+          </form>
+        </article>
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">My Visitor Logs</p>
+              <h2>Recent entries</h2>
+            </div>
+          </div>
+          <div class="table-wrap small-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Visitor</th>
+                  <th>Date</th>
+                  <th>Time In</th>
+                  <th>Time Out</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody id="tenant-visitor-table"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section id="security" class="section-block split-block">
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Password Reset</p>
+              <h2>Secure recovery request</h2>
+            </div>
+          </div>
+          <div id="reset-card" class="reset-card"></div>
+        </article>
+        <article class="card data-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Profile Update</p>
+              <h2>Update contact details</h2>
+            </div>
+          </div>
+          <form class="stack-form" id="tenant-profile-form">
+            <input type="text" name="name" placeholder="Full name" readonly>
+            <input type="email" name="email" placeholder="Email address" readonly>
+            <input type="text" name="contact" placeholder="Contact number" required>
+            <button class="button primary" type="submit">Save Contact Number</button>
+          </form>
+          <p class="form-note">Tenants can update only their own contact number here. Name, role, room assignment, and billing remain admin-managed.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div class="modal-overlay" id="password-reset-modal" hidden>
+    <div class="modal-card card password-reset-card">
+      <div class="section-heading compact">
+        <div>
+          <p class="eyebrow">Account Security</p>
+          <h2>Reset Password</h2>
+        </div>
+        <button class="button secondary" id="password-reset-close" type="button">Close</button>
+      </div>
+      <form class="stack-form" id="password-reset-form">
+        <label class="reset-inline-label">
+          <span>New Password</span>
+          <input type="password" name="newPassword" minlength="6" required>
+        </label>
+        <label class="reset-inline-label">
+          <span>Confirm Password</span>
+          <input type="password" name="confirmPassword" minlength="6" required>
+        </label>
+        <button class="button primary" type="submit">Update Password</button>
+      </form>
+      <p class="auth-message" id="password-reset-message"></p>
+    </div>
+  </div>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
