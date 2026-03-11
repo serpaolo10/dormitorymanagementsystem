@@ -751,7 +751,6 @@ async function initAdmin() {
           `}
         <td>
           <div class="table-actions">
-            ${(tenant.status || '') === 'Pending Approval' && inlineEditingTenantId !== tenant.id ? `<button class="button secondary" data-approve-tenant="${tenant.id}" type="button">Approve</button>` : ''}
             ${inlineEditingTenantId === tenant.id
               ? `
                 <button class="button primary" data-save-inline-tenant="${tenant.id}" type="button">Save Tenant Changes</button>
@@ -865,14 +864,6 @@ async function initAdmin() {
         });
       };
     };
-
-    tenantTable.querySelectorAll('[data-approve-tenant]').forEach((button) => {
-      button.addEventListener('click', async () => {
-        await updateDoc(doc(db, collections.users, button.dataset.approveTenant), { status: 'Active' });
-        setStatus('admin-status', 'Tenant approved successfully.');
-        await refresh();
-      });
-    });
 
     tenantTable.querySelectorAll('[data-start-inline-tenant]').forEach((button) => {
       button.addEventListener('click', async () => {
