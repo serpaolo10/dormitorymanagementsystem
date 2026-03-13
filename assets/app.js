@@ -198,6 +198,25 @@ async function getProfile(uid) {
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 }
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function getProfileWithRetry(uid, options = {}) {
+  const attempts = Number(options.attempts || 6);
+  const waitMs = Number(options.waitMs || 350);
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const profile = await getProfile(uid);
+    if (profile) return profile;
+    if (attempt < attempts - 1) {
+      await delay(waitMs);
+    }
+  }
+
+  return null;
+}
+
 async function ensureDefaultRooms() {
   const roomsSnapshot = await getDocs(collection(db, collections.rooms));
   if (!roomsSnapshot.empty) return;
@@ -220,7 +239,7 @@ async function requireRole(expectedRole) {
         return;
       }
 
-      const profile = await getProfile(user.uid);
+      const profile = await getProfileWithRetry(user.uid);
       if (!profile) {
         await signOut(auth);
         window.location.href = 'index.html';
@@ -275,7 +294,7 @@ function renderStats(targetId, items) {
 async function initHome() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) return;
-    const profile = await getProfile(user.uid);
+    const profile = await getProfileWithRetry(user.uid, { attempts: 3, waitMs: 250 });
     if (profile) redirectForRole(profile.role);
   });
 
@@ -325,7 +344,7 @@ async function initHome() {
       const form = new FormData(event.currentTarget);
       try {
         const credential = await signInWithEmailAndPassword(auth, form.get('email'), form.get('password'));
-        const profile = await getProfile(credential.user.uid);
+        const profile = await getProfileWithRetry(credential.user.uid);
         if (!profile) throw new Error('Missing user profile in Firestore.');
         setMessage('Sign-in successful. Redirecting...');
         redirectForRole(profile.role);
@@ -351,6 +370,11 @@ async function initHome() {
           roomId: null,
           createdAt: serverTimestamp()
         });
+
+        const savedProfile = await getProfileWithRetry(credential.user.uid);
+        if (!savedProfile) {
+          throw new Error('Account was created in Authentication, but the Firestore profile was not available yet. Please try signing in again.');
+        }
 
       if (role === 'admin') {
         await ensureDefaultRooms();
