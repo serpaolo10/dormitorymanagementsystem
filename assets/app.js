@@ -298,7 +298,6 @@ async function initHome() {
     if (profile) redirectForRole(profile.role);
   });
 
-  const accessSection = document.getElementById('access');
   const modalOverlay = document.getElementById('modal-overlay');
   const loginPanel = document.getElementById('login-panel');
   const signupPanel = document.getElementById('signup-panel');
@@ -317,8 +316,7 @@ async function initHome() {
   };
 
   const showAccessPanel = (panel) => {
-    if (!accessSection || !modalOverlay || !loginPanel || !signupPanel) return;
-    accessSection.hidden = false;
+    if (!modalOverlay || !loginPanel || !signupPanel) return;
     loginPanel.hidden = panel !== 'signin';
     signupPanel.hidden = panel !== 'register';
     modalOverlay.hidden = false;
@@ -681,9 +679,6 @@ async function initAdmin() {
     const tenants = users
       .filter((entry) => normalizeRole(entry.role) === 'tenant')
       .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
-    const allTenantProfiles = users
-      .filter((entry) => normalizeRole(entry.role) === 'tenant')
-      .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
     const roomsWithOccupants = rooms.map((room) => {
       const occupants = tenants.filter((tenant) => tenant.roomId === room.id);
       const derivedStatus = occupants.length ? 'Occupied' : 'Available';
@@ -851,7 +846,6 @@ async function initAdmin() {
     const roomCards = document.getElementById('room-cards');
     roomCards.innerHTML = managedRooms.map((room) => {
       const occupants = room.occupants;
-      const primaryOccupant = occupants[0];
       const isAvailable = String(room.derivedStatus).toLowerCase() === 'available';
       return `
         <article class="room-card ${isAvailable ? 'room-card-available' : 'room-card-occupied'}">
@@ -861,7 +855,7 @@ async function initAdmin() {
           <p>Rent: ${formatCurrency(room.monthlyRent)}</p>
           <p>Status: ${badge(room.derivedStatus)}</p>
           <p>Occupants: ${occupants.length ? occupants.map((tenant) => tenant.name).join(', ') : 'None'}</p>
-          <button class="room-hover-action" data-open-room-modal="${room.id}" data-room-label="${escapeHtml(room.roomNumber)}" data-tenant-id="${primaryOccupant?.id || ''}" type="button">Edit</button>
+          <button class="room-hover-action" data-open-room-modal="${room.id}" data-room-label="${escapeHtml(room.roomNumber)}" data-tenant-id="${occupants[0]?.id || ''}" type="button">Edit</button>
         </article>
       `;
     }).join('');
@@ -1007,7 +1001,7 @@ async function initAdmin() {
       });
     });
 
-    const assignableTenants = tenants.filter((tenant) => tenant.status !== 'Inactive');
+    const assignableTenants = tenants.filter((tenant) => tenant.isArchived !== true && tenant.status !== 'Inactive');
     const modalTenantSelect = roomModalForm?.querySelector('select[name="tenant"]');
     if (modalTenantSelect) {
       modalTenantSelect.innerHTML = `<option value="" disabled selected>Tenant Name</option>` +
@@ -1023,7 +1017,7 @@ async function initAdmin() {
     const billTable = document.getElementById('bill-table');
     billTable.innerHTML = [...bills].reverse().map((bill) => `
       <tr>
-        <td>${tenantName(allTenantProfiles, bill.tenantId)}</td>
+        <td>${tenantName(tenants, bill.tenantId)}</td>
         <td>${bill.month}</td>
         <td>${formatCurrency(bill.total)}</td>
         <td>${badge(bill.status)}</td>
@@ -1049,7 +1043,7 @@ async function initAdmin() {
       return `
         <tr>
           <td>${billCell}</td>
-          <td>${tenantName(allTenantProfiles, tenantId)}</td>
+          <td>${tenantName(tenants, tenantId)}</td>
           <td>${formatCurrency(payment ? payment.amount : bill?.total)}</td>
           <td>${payment ? payment.date : (bill?.dueDate || '-')}</td>
           <td>${payment ? payment.method : 'Pending'}</td>
@@ -1062,7 +1056,7 @@ async function initAdmin() {
     const visitorTable = document.getElementById('visitor-table');
     visitorTable.innerHTML = [...visitorLogs].reverse().map((entry) => `
       <tr>
-        <td>${tenantName(allTenantProfiles, entry.tenantId)}</td>
+        <td>${tenantName(tenants, entry.tenantId)}</td>
         <td>${entry.visitorName}</td>
         <td>${entry.visitDate}</td>
         <td>${entry.timeIn}</td>
