@@ -1,7 +1,8 @@
-import { auth, db } from './firebase-config.js';
+﻿import { auth, db } from './firebase-config.js';
 import {
   confirmPasswordReset,
   createUserWithEmailAndPassword,
+  deleteUser,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -138,6 +139,13 @@ function setMessage(text, isError = false) {
   node.className = `auth-message ${isError ? 'error' : 'success'}`;
 }
 
+function setPanelMessage(id, text, isError = false) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  node.textContent = text;
+  node.className = `auth-message ${isError ? 'error' : 'success'}`;
+}
+
 function setStatus(id, text, isError = false) {
   const node = document.getElementById(id);
   if (!node) return;
@@ -209,6 +217,27 @@ async function getProfileWithRetry(uid, options = {}) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     const profile = await getProfile(uid);
     if (profile) return profile;
+    if (attempt < attempts - 1) {
+      await delay(waitMs);
+    }
+  }
+
+  return null;
+}
+
+async function createUserProfileWithRetry(uid, profileData, options = {}) {
+  const attempts = Number(options.attempts || 4);
+  const waitMs = Number(options.waitMs || 500);
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      await setDoc(doc(db, collections.users, uid), profileData);
+      const savedProfile = await getProfileWithRetry(uid, { attempts: 4, waitMs: 250 });
+      if (savedProfile) return savedProfile;
+    } catch (error) {
+      if (attempt >= attempts - 1) throw error;
+    }
+
     if (attempt < attempts - 1) {
       await delay(waitMs);
     }
@@ -356,10 +385,11 @@ async function initHome() {
     await runWithButtonLock(event.currentTarget, 'Creating Account...', async () => {
       const form = new FormData(event.currentTarget);
       const role = form.get('role');
+      setPanelMessage('signup-message', '');
 
       try {
         const credential = await createUserWithEmailAndPassword(auth, form.get('email'), form.get('password'));
-        await setDoc(doc(db, collections.users, credential.user.uid), {
+        const savedProfile = await createUserProfileWithRetry(credential.user.uid, {
           name: form.get('name'),
           email: form.get('email'),
           contact: form.get('contact'),
@@ -369,24 +399,32 @@ async function initHome() {
           createdAt: serverTimestamp()
         });
 
-        const savedProfile = await getProfileWithRetry(credential.user.uid);
         if (!savedProfile) {
-          throw new Error('Account was created in Authentication, but the Firestore profile was not available yet. Please try signing in again.');
+          throw new Error('Account was created in Authentication, but the Firestore profile could not be saved.');
         }
 
-      if (role === 'admin') {
-        await ensureDefaultRooms();
-      }
+        if (role === 'admin') {
+          await ensureDefaultRooms();
+        }
 
-      setMessage(role === 'tenant'
-        ? 'Tenant account created successfully. Wait for admin assignment, then you can view room and billing details.'
-        : 'Admin account created successfully. Redirecting...');
-      redirectForRole(role);
-    } catch (error) {
-      setMessage(error.message, true);
-    }
+        setPanelMessage(role === 'tenant'
+          ? 'Tenant account created successfully. Wait for admin assignment, then you can view room and billing details.'
+          : 'Admin account created successfully. Redirecting...');
+        redirectForRole(role);
+      } catch (error) {
+        console.error('Signup profile sync failed:', error);
+        if (auth.currentUser) {
+          try {
+            await deleteUser(auth.currentUser);
+          } catch (cleanupError) {
+            console.error('Unable to delete incomplete auth user:', cleanupError);
+          }
+        }
+        setPanelMessage('signup-message', error.message || 'Unable to save the user profile in Firestore.', true);
+      }
+    });
   });
-  });
+
   forgotToggleButton?.addEventListener('click', () => {
     if (!resetInlineBox) return;
     resetInlineBox.hidden = !resetInlineBox.hidden;
@@ -1408,6 +1446,10 @@ init().catch((error) => {
   setText('admin-status', error.message || 'Unable to load admin data.');
   setText('tenant-status', error.message || 'Unable to load tenant data.');
 });
+
+
+
+
 
 
 
