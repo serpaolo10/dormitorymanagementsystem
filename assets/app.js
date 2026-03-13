@@ -756,7 +756,11 @@ async function initAdmin() {
             <td>
               <select class="table-inline-select" data-inline-room>
                 <option value="">Not assigned</option>
-                ${managedRooms.map((room) => `<option value="${room.id}" ${tenant.roomId === room.id ? 'selected' : ''}>${room.roomNumber}</option>`).join('')}
+                ${managedRooms.map((room) => {
+                  const isFull = room.occupants.length >= Number(room.capacity || 0);
+                  const keepSelectable = tenant.roomId === room.id;
+                  return `<option value="${room.id}" ${tenant.roomId === room.id ? 'selected' : ''} ${isFull && !keepSelectable ? 'disabled' : ''}>${room.roomNumber}${isFull && !keepSelectable ? ' (Full)' : ''}</option>`;
+                }).join('')}
               </select>
             </td>
             <td>
@@ -853,6 +857,7 @@ async function initAdmin() {
         <article class="room-card ${isAvailable ? 'room-card-available' : 'room-card-occupied'}">
           <h3>${room.roomNumber}</h3>
           <p>Capacity: ${room.capacity}</p>
+          <p>Occupancy: ${occupants.length} / ${room.capacity}</p>
           <p>Rent: ${formatCurrency(room.monthlyRent)}</p>
           <p>Status: ${badge(room.derivedStatus)}</p>
           <p>Occupants: ${occupants.length ? occupants.map((tenant) => tenant.name).join(', ') : 'None'}</p>
